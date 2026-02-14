@@ -1,25 +1,54 @@
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 
-options = Options()
-options.add_argument("--headless=new")   # bắt buộc
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
-options.add_argument("--disable-gpu")
 
-driver = webdriver.Chrome(options=options)
-wait = WebDriverWait(driver, 10)
+def main():
+    username = os.getenv("PNJ_USERNAME")
+    password = os.getenv("PNJ_PASSWORD")
 
-driver.get("https://example.com/login")
+    if not username or not password:
+        raise Exception("Missing PNJ_USERNAME or PNJ_PASSWORD")
 
-driver.find_element(By.ID, "username").send_keys("kiet.hmt")
-driver.find_element(By.ID, "password").send_keys("Kiet$123", Keys.RETURN)
+    chrome_options = Options()
 
-# Kiểm tra login thành công
-wait.until(EC.url_contains("dashboard"))
-assert "dashboard" in driver.current_url
+    # Required for GitHub Actions
+    chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--window-size=1920,1080")
 
-print("Login OK")
+    service = Service(ChromeDriverManager().install())
 
-driver.quit()
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+
+    try:
+        wait = WebDriverWait(driver, 20)
+
+        driver.get("https://example.com/login")
+
+        wait.until(EC.presence_of_element_located((By.ID, "username")))
+
+        driver.find_element(By.ID, "username").send_keys(username)
+        driver.find_element(By.ID, "password").send_keys(password, Keys.RETURN)
+
+        # Wait until login success
+        wait.until(EC.url_contains("dashboard"))
+
+        assert "dashboard" in driver.current_url
+
+        print("✅ Login OK")
+
+    finally:
+        driver.quit()
+
+
+if __name__ == "__main__":
+    main()
