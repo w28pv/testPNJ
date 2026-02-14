@@ -29,27 +29,36 @@ def main():
     try:
         driver.get("https://message.pnj.com.vn/login")
 
-        # username field
+        # USERNAME
         username_input = wait.until(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, "input[id$='_login']")
+            EC.element_to_be_clickable(
+                (By.XPATH, "//input[contains(@id,'login')]")
             )
         )
 
-        # password field
-        password_input = wait.until(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, "input[id$='_password']")
-            )
-        )
-
+        driver.execute_script("arguments[0].scrollIntoView();", username_input)
+        username_input.click()
+        username_input.clear()
         username_input.send_keys(username)
+
+        # PASSWORD
+        password_input = wait.until(
+            EC.element_to_be_clickable(
+                (By.XPATH, "//input[contains(@id,'password')]")
+            )
+        )
+
+        password_input.click()
+        password_input.clear()
         password_input.send_keys(password)
+
         password_input.send_keys(Keys.RETURN)
 
+        # WAIT REDIRECT
         wait.until(EC.url_contains("dashboard"))
 
         print("✅ Login OK")
+        print(driver.current_url)
 
     finally:
         driver.quit()
