@@ -27,17 +27,16 @@ def main():
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     try:
-        wait = WebDriverWait(driver, 20)
+        
 
         driver.get("https://message.pnj.com.vn/login")
 
-        wait.until(EC.presence_of_element_located((By.ID, "_EmployeeLogin_INSTANCE_9WKQN0ib39gl_login")))
+        wait = WebDriverWait(driver, 5)
 
         driver.find_element(By.ID, "_EmployeeLogin_INSTANCE_9WKQN0ib39gl_login").send_keys(username)
         driver.find_element(By.ID, "_EmployeeLogin_INSTANCE_9WKQN0ib39gl_password").send_keys(password, Keys.RETURN)
 
-        # Wait until login success
-        wait.until(EC.url_contains("dashboard"))
+        wait = WebDriverWait(driver, 5)
 
         assert "dashboard" in driver.current_url
 
