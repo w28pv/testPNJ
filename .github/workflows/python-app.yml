@@ -50,7 +50,5 @@ jobs:
       
       - name: Run login test
         env:
-          PNJ_USERNAME: ${{ secrets.PNJ_USERNAME }}
-          PNJ_PASSWORD: ${{ secrets.PNJ_PASSWORD }}
           HEADLESS: "true"
         run: python .github/workflows/login_pnj.py
