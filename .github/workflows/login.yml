@@ -1,0 +1,33 @@
+name: PNJ Login Test
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Chrome
+      uses: browser-actions/setup-chrome@v1
+
+    - name: Install dependencies
+      run: |
+        pip install selenium
+
+    - name: Run login test
+      run: python login_pnj.py
+
+    - name: Upload screenshot
+      uses: actions/upload-artifact@v4
+      with:
+        name: screenshot
+        path: "*.png"
