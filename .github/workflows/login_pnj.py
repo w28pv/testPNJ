@@ -8,7 +8,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 
-def main():
 
     username = "kiet.hmt"
     password = "Kiet$123"
@@ -62,7 +61,3 @@ def main():
 
     finally:
         driver.quit()
-
-
-if __name__ == "__main__":
-    main()
