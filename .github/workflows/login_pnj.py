@@ -10,11 +10,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 
 def main():
-    username = os.getenv("PNJ_USERNAME")
-    password = os.getenv("PNJ_PASSWORD")
-
-    if not username or not password:
-        raise Exception("Missing PNJ_USERNAME or PNJ_PASSWORD")
+    username = "kiet.hmt"
+    password = "Kiet$123"
 
     chrome_options = Options()
 
@@ -32,12 +29,12 @@ def main():
     try:
         wait = WebDriverWait(driver, 20)
 
-        driver.get("https://example.com/login")
+        driver.get("https://message.pnj.com.vn/login")
 
-        wait.until(EC.presence_of_element_located((By.ID, "username")))
+        wait.until(EC.presence_of_element_located((By.ID, "_EmployeeLogin_INSTANCE_9WKQN0ib39gl_login")))
 
-        driver.find_element(By.ID, "username").send_keys(username)
-        driver.find_element(By.ID, "password").send_keys(password, Keys.RETURN)
+        driver.find_element(By.ID, "_EmployeeLogin_INSTANCE_9WKQN0ib39gl_login").send_keys(username)
+        driver.find_element(By.ID, "_EmployeeLogin_INSTANCE_9WKQN0ib39gl_password").send_keys(password, Keys.RETURN)
 
         # Wait until login success
         wait.until(EC.url_contains("dashboard"))
