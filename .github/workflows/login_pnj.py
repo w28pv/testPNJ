@@ -10,6 +10,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.keys import Keys
+
 
 # Mở trình duyệt Chrome (Selenium 4 tự nhận driver nếu đã cài Chrome mới)
 driver = webdriver.Chrome()
