@@ -1,4 +1,3 @@
-import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -10,35 +9,45 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 
 def main():
+
     username = "kiet.hmt"
     password = "Kiet$123"
 
     chrome_options = Options()
-
-    # Required for GitHub Actions
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--window-size=1920,1080")
 
-    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(
+        service=Service(ChromeDriverManager().install()),
+        options=chrome_options
+    )
 
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    wait = WebDriverWait(driver, 20)
 
     try:
-        
-
         driver.get("https://message.pnj.com.vn/login")
 
-        wait = WebDriverWait(driver, 5)
+        # username field
+        username_input = wait.until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, "input[id$='_login']")
+            )
+        )
 
-        driver.find_element(By.ID, "_EmployeeLogin_INSTANCE_9WKQN0ib39gl_login").send_keys(username)
-        driver.find_element(By.ID, "_EmployeeLogin_INSTANCE_9WKQN0ib39gl_password").send_keys(password, Keys.RETURN)
+        # password field
+        password_input = wait.until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, "input[id$='_password']")
+            )
+        )
 
-        wait = WebDriverWait(driver, 5)
+        username_input.send_keys(username)
+        password_input.send_keys(password)
+        password_input.send_keys(Keys.RETURN)
 
-        assert "dashboard" in driver.current_url
+        wait.until(EC.url_contains("dashboard"))
 
         print("✅ Login OK")
 
